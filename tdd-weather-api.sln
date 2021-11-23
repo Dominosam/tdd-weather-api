@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TddWeatherApi", "tdd-weather-api\TddWeatherApi.csproj", "{3E015D9A-55A7-4393-AD68-153314F39B5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TddWeatherApi.Tests", "TddWeatherApi.Tests\TddWeatherApi.Tests.csproj", "{12E385C4-49CE-4B5B-B384-E1805480377D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E015D9A-55A7-4393-AD68-153314F39B5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E015D9A-55A7-4393-AD68-153314F39B5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E015D9A-55A7-4393-AD68-153314F39B5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E015D9A-55A7-4393-AD68-153314F39B5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12E385C4-49CE-4B5B-B384-E1805480377D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12E385C4-49CE-4B5B-B384-E1805480377D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12E385C4-49CE-4B5B-B384-E1805480377D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12E385C4-49CE-4B5B-B384-E1805480377D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6AACD650-C280-4A2D-9C74-0748110A83AD}
+	EndGlobalSection
+EndGlobal
