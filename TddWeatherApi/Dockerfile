@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
-COPY ["tdd-weather-api/tdd-weather-api.csproj", "tdd-weather-api/"]
-RUN dotnet restore "tdd-weather-api/tdd-weather-api.csproj"
+COPY ["TddWeatherApi/TddWeatherApi.csproj", "TddWeatherApi/"]
+RUN dotnet restore "TddWeatherApi/TddWeatherApi.csproj"
 COPY . .
-WORKDIR "/src/tdd-weather-api"
-RUN dotnet build "tdd-weather-api.csproj" -c Release -o /app/build
+WORKDIR "/src/TddWeatherApi"
+RUN dotnet build "TddWeatherApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "tdd-weather-api.csproj" -c Release -o /app/publish
+RUN dotnet publish "TddWeatherApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "tdd-weather-api.dll"]
+ENTRYPOINT ["dotnet", "TddWeatherApi.dll"]

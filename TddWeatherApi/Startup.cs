@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace tdd_weather_api
+namespace TddWeatherApi
 {
     public class Startup
     {
@@ -44,7 +44,7 @@ namespace tdd_weather_api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(options => 
+                app.UseSwaggerUI(options =>
                 {
                     options.SwaggerEndpoint("swagger/v1/swagger.json", "TDD Weather API");
                     options.RoutePrefix = string.Empty;
