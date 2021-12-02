@@ -17,7 +17,6 @@ namespace TddWeatherApi.Tests.ServiceTests
         private readonly string BaseURL = "api.openweathermap.org/data/2.5";
         private readonly string ApiKey = "638a97f54d47a234a32247ca1e3ad366";
 
-
         public ApiConnectionServiceTests()
         {
             var services = new ServiceCollection();
@@ -67,8 +66,86 @@ namespace TddWeatherApi.Tests.ServiceTests
             //Act
             string builtQueryString = _apiConnectionService.MapNameValueCollectionToQueryString(nameValueCollection);
 
-            //
+            //Assert
             Assert.Equal(expectedQueryString, builtQueryString);
+        }
+
+        [Fact]
+        public void GetLocationParameter_WithGivenLocationParameters_ReturnsParameter()
+        {
+            var cityName = "Warsaw";
+            var stateCode = "PL-14";
+            var countryCode = "PL";
+
+            //Arrange
+            var expectedFullParameter = string.Format("{0},{1},{2}",
+                cityName, stateCode, countryCode);
+
+            var expectedSingleParameter = string.Format("{0}",
+                cityName);
+
+            //Act
+            string builtFullParameter = _apiConnectionService.GetLocationParameter(cityName, stateCode, countryCode);
+            string builtSingleParameter = _apiConnectionService.GetLocationParameter(cityName: cityName);
+
+            //Assert
+            Assert.Equal(expectedFullParameter, builtFullParameter);
+            Assert.Equal(expectedSingleParameter, builtSingleParameter);
+        }
+
+        [Fact]
+        public void GetApiURI_WithGivenSpecificParameters_ReturnsApiURI()
+        {
+            var cityName = "Warsaw";
+            var stateCode = "PL-14";
+            var countryCode = "PL";
+
+            var apiConnectionParameters = new ApiConnectionParameters()
+            {
+                CityName = cityName,
+                ApiKey = ApiKey,
+                OpenWeatherApiURL = BaseURL,
+                StateCode = stateCode,
+                CountryCode = countryCode,
+                Mode = AppServices.Models.Enums.ReturnFormat.JSON,
+                Units = AppServices.Models.Enums.UnitOfMeasurement.Metric,
+                Lang = "en"
+            };
+
+            //Arrange
+            var expectedURI = string.Format("{0}{1}{2}%2c{3}%2c{4}&units={5}&lang={6}&appid={7}",
+                BaseURL, "/weather?q=", cityName, stateCode, countryCode, "metric", "en", ApiKey);
+
+            //Act
+            string builtURI = _apiConnectionService.GetApiURI(apiConnectionParameters);
+
+            //Assert
+            Assert.Equal(expectedURI, builtURI);
+        }
+
+        [Fact]
+        public void GetResponse_WithGivenParameters_ReturnsApiResponse()
+        {
+            var cityName = "Warsaw";
+            var stateCode = "PL-14";
+            var countryCode = "PL";
+
+            var apiConnectionParameters = new ApiConnectionParameters()
+            {
+                CityName = cityName,
+                ApiKey = ApiKey,
+                OpenWeatherApiURL = BaseURL,
+                StateCode = stateCode,
+                CountryCode = countryCode,
+                Mode = AppServices.Models.Enums.ReturnFormat.JSON,
+                Units = AppServices.Models.Enums.UnitOfMeasurement.Metric,
+                Lang = "en"
+            };
+
+            var expectedConnectionResponse = new ApiConnectionResponseModel()
+            {
+
+            };
         }
     }
 }

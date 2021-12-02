@@ -12,6 +12,8 @@ namespace TddWeatherApi.AppInterfaces
         public Task<bool> HasConnection(ApiConnectionParameters apiConnectionParameters);
         public Task<ApiConnectionResponseModel> GetResponse(ApiConnectionParameters apiConnectionParameters);
         public string GetApiURI(ApiConnectionParameters apiConnectionParameters);
-        string MapNameValueCollectionToQueryString(NameValueCollection nameValueCollection);
+        public string MapNameValueCollectionToQueryString(NameValueCollection nameValueCollection);
+        public string GetLocationParameter(string cityName = "", string stateCode = "", string countryCode = "");
+
     }
 }
