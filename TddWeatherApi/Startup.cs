@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TddWeatherApi.Helpers;
 
 namespace TddWeatherApi
 {
@@ -35,6 +37,15 @@ namespace TddWeatherApi
                     Description = "An ASP.NET Core Web API for gathering weather forecasts written in TDD manner."
                 });
             });
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AutoMapperConfiguration());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            AutoMapperConfiguration.RegisterMappings();
+            //services.AddAutoMapper(typeof(AutoMapperConfiguration));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

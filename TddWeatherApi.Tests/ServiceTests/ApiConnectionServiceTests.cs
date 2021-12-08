@@ -1,12 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Text;
+using System.Threading.Tasks;
 using TddWeatherApi.AppInterfaces;
 using TddWeatherApi.AppServices;
 using TddWeatherApi.AppServices.Models;
+using TddWeatherApi.Helpers;
 using Xunit;
 
 namespace TddWeatherApi.Tests.ServiceTests
@@ -14,7 +17,7 @@ namespace TddWeatherApi.Tests.ServiceTests
     public class ApiConnectionServiceTests
     {
         private readonly IApiConnectionService _apiConnectionService;
-        private readonly string BaseURL = "api.openweathermap.org/data/2.5";
+        private readonly string BaseURL = "http://api.openweathermap.org/data/2.5";
         private readonly string ApiKey = "638a97f54d47a234a32247ca1e3ad366";
 
         public ApiConnectionServiceTests()
@@ -22,9 +25,16 @@ namespace TddWeatherApi.Tests.ServiceTests
             var services = new ServiceCollection();
             services.AddTransient<IApiConnectionService, ApiConnectionService>();
 
-            var serviceProvider = services.BuildServiceProvider();
-            _apiConnectionService = serviceProvider.GetService<IApiConnectionService>();
+            var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfiguration());
+            });
+            var mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
 
+            var serviceProvider = services.BuildServiceProvider();
+
+            _apiConnectionService = serviceProvider.GetService<IApiConnectionService>();
         }
 
 
@@ -70,6 +80,7 @@ namespace TddWeatherApi.Tests.ServiceTests
             Assert.Equal(expectedQueryString, builtQueryString);
         }
 
+        //do opisania: czy rozbijać test case'y czy łączyć per funkcjonalność
         [Fact]
         public void GetLocationParameter_WithGivenLocationParameters_ReturnsParameter()
         {
@@ -124,7 +135,7 @@ namespace TddWeatherApi.Tests.ServiceTests
         }
 
         [Fact]
-        public void GetResponse_WithGivenParameters_ReturnsApiResponse()
+        public async Task GetResponse_WithGivenParameters_ReturnsApiResponseAsync()
         {
             var cityName = "Warsaw";
             var stateCode = "PL-14";
@@ -142,10 +153,28 @@ namespace TddWeatherApi.Tests.ServiceTests
                 Lang = "en"
             };
 
-            var expectedConnectionResponse = new ApiConnectionResponseModel()
+            //Arrange
+            var expectedResponseModel = new ApiConnectionResponseModel()
             {
-
+                City = "Warsaw",
+                Country = "PL",
+                Coordinates = new Coordinates { Latitude = 52.229801177978516, Longitude = 21.01180076599121 },
+                GeneralWeatherData = new GeneralWeatherData
+                {
+                    //Always will change
+                }
             };
+
+            //Act
+            AutoMapperConfiguration.RegisterMappings();
+            ApiConnectionResponseModel response = await _apiConnectionService.GetResponse(apiConnectionParameters);
+
+            //Assert
+            Assert.Equal(expectedResponseModel.City, response.City);
+            Assert.Equal(expectedResponseModel.Country, response.Country);
+            Assert.Equal(expectedResponseModel.Coordinates.Latitude, response.Coordinates.Latitude);
+            Assert.Equal(expectedResponseModel.Coordinates.Longitude, response.Coordinates.Longitude);
+
         }
     }
 }

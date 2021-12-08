@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutoMapper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -9,17 +10,21 @@ using System.Threading.Tasks;
 using System.Web;
 using TddWeatherApi.AppInterfaces;
 using TddWeatherApi.AppServices.Models;
+using TddWeatherApi.AppServices.Models.DTOs;
+using TddWeatherApi.Helpers;
 
 namespace TddWeatherApi.AppServices
 {
     public class ApiConnectionService : IApiConnectionService
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly IMapper _mapper;
 
-        public ApiConnectionService(HttpClient httpClient)
+        public ApiConnectionService(IMapper mapper)
         {
-            _httpClient = httpClient;
+            _mapper = mapper;
         }
+
 
         public string GetApiURI(ApiConnectionParameters apiConnectionParameters)
         {
@@ -56,16 +61,18 @@ namespace TddWeatherApi.AppServices
         {
             ApiConnectionResponseModel result = null;
             var httpRequest = new HttpRequestMessage();
-            httpRequest.RequestUri = new Uri(GetApiURI(apiConnectionParameters));
+            var connectionUri = new Uri(GetApiURI(apiConnectionParameters));
+            httpRequest.RequestUri = connectionUri;
 
             var response = _httpClient.SendAsync(httpRequest);
             try
             {
                 var stringContent = await response.Result.Content.ReadAsStringAsync();
-                result = JsonConvert.DeserializeObject<ApiConnectionResponseModel>(stringContent);
+                var dto = JsonConvert.DeserializeObject<ApiConnectionResponseModelDto>(stringContent);
+                result = AutoMapperConfiguration.Mapper.Map<ApiConnectionResponseModelDto, ApiConnectionResponseModel>(dto);
             }
             finally
-            {1
+            {
                 response.Dispose();
             }
             return result;

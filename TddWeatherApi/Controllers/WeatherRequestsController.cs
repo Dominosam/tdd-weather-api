@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TddWeatherApi.AppInterfaces;
+using TddWeatherApi.AppServices.Models;
 
 namespace TddWeatherApi.Controllers
 {
@@ -13,6 +14,16 @@ namespace TddWeatherApi.Controllers
     [ApiController]
     public class WeatherRequestsController : ControllerBase
     {
-        private readonly IWeatherRequestsService _weatherRequestsService;
+        private IApiConnectionService _apiConnectionService;
+
+        public WeatherRequestsController(IApiConnectionService apiConnectionService)
+        {
+            _apiConnectionService = apiConnectionService;
+        }
+
+        public Task GetWeather(ApiConnectionParameters apiConnectionParameters)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
