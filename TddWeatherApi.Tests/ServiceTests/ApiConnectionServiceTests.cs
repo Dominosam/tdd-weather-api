@@ -30,6 +30,7 @@ namespace TddWeatherApi.Tests.ServiceTests
                 cfg.AddProfile(new AutoMapperConfiguration());
             });
             var mapper = config.CreateMapper();
+            AutoMapperConfiguration.RegisterMappings();
             services.AddSingleton(mapper);
 
             var serviceProvider = services.BuildServiceProvider();
@@ -166,7 +167,6 @@ namespace TddWeatherApi.Tests.ServiceTests
             };
 
             //Act
-            AutoMapperConfiguration.RegisterMappings();
             ApiConnectionResponseModel response = await _apiConnectionService.GetResponse(apiConnectionParameters);
 
             //Assert

@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TddWeatherApi.AppInterfaces;
+using TddWeatherApi.AppServices;
 using TddWeatherApi.Helpers;
 
 namespace TddWeatherApi
@@ -45,6 +47,7 @@ namespace TddWeatherApi
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
             AutoMapperConfiguration.RegisterMappings();
+            services.AddScoped<IApiConnectionService, ApiConnectionService>(); 
             //services.AddAutoMapper(typeof(AutoMapperConfiguration));
         }
 

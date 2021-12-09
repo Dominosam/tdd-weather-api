@@ -40,8 +40,8 @@ namespace TddWeatherApi.Helpers
                 .ForMember(rsp => rsp.City, opt => opt.MapFrom(dto => dto.name))
                 .ForMember(rsp => rsp.Country, opt => opt.MapFrom(dto => dto.sys.country))
                 .ForMember(rsp => rsp.Coordinates, opt => opt.MapFrom(dto => Mapper.Map<ApiConnectionResponseModelDto, Coordinates>(dto)))
-                .ForMember(rsp => rsp.GeneralWeatherData, opt => opt.MapFrom(dto => Mapper.Map<ApiConnectionResponseModelDto, GeneralWeatherData>(dto)))
-                .IncludeAllDerived();
+                .ForMember(rsp => rsp.GeneralWeatherData, opt => opt.MapFrom(dto => Mapper.Map<ApiConnectionResponseModelDto, GeneralWeatherData>(dto))).IncludeAllDerived();
+
             });
             Mapper = MapperConfiguration.CreateMapper();
         }

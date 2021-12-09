@@ -1,11 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TddWeatherApi.AppInterfaces;
 using TddWeatherApi.AppServices;
 using TddWeatherApi.AppServices.Models;
 using TddWeatherApi.Controllers;
+using TddWeatherApi.Helpers;
+using TddWeatherApi.Utils.Models;
 using Xunit;
 
 namespace TddWeatherApi.Tests.ControllerTests
@@ -21,16 +25,46 @@ namespace TddWeatherApi.Tests.ControllerTests
             var services = new ServiceCollection();
             services.AddTransient<IApiConnectionService, ApiConnectionService>();
 
+            var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfiguration());
+            });
+            var mapper = config.CreateMapper();
+            AutoMapperConfiguration.RegisterMappings();
+            services.AddSingleton(mapper);
+
             var serviceProvider = services.BuildServiceProvider();
 
             _apiConnectionService = serviceProvider.GetService<IApiConnectionService>();
         }
         [Fact]
-        public void GetWeather_WithInvalidStateModel_ReturnsBadRequest()
+        public async Task GetWeather_WithInvalidStateModel_ReturnsNotFoundAsync()
         {
             //Arrange
             WeatherRequestsController weatherRequestsController = new WeatherRequestsController(_apiConnectionService);
-            weatherRequestsController.ModelState.AddModelError("SessionName", "Required");
+
+            var cityName = "DefinitelyNotWarsaw";
+
+            var apiConnectionParameters = new ApiConnectionParameters()
+            {
+                CityName = cityName,
+                ApiKey = ApiKey,
+                OpenWeatherApiURL = BaseURL
+            };
+
+            //Act
+            var result = await weatherRequestsController.GetWeather(apiConnectionParameters);
+            var notFoundResult = result as NotFoundObjectResult;
+
+            //Assert
+            Assert.NotNull(notFoundResult);
+            Assert.Equal(404, notFoundResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetWeather_WithValidStateModel_ReturnsOkAsync()
+        {
+            WeatherRequestsController weatherRequestsController = new WeatherRequestsController(_apiConnectionService);
 
             var cityName = "Warsaw";
 
@@ -42,8 +76,12 @@ namespace TddWeatherApi.Tests.ControllerTests
             };
 
             //Act
-            //var result = await weatherRequestsController.GetWeather(apiConnectionParameters);
-            
+            var result = await weatherRequestsController.GetWeather(apiConnectionParameters);
+            var okResult = result as OkObjectResult;
+
+            //Assert
+            Assert.NotNull(okResult);
+            Assert.Equal(200, okResult.StatusCode);
         }
     }
 }

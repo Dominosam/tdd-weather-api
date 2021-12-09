@@ -69,7 +69,10 @@ namespace TddWeatherApi.AppServices
             {
                 var stringContent = await response.Result.Content.ReadAsStringAsync();
                 var dto = JsonConvert.DeserializeObject<ApiConnectionResponseModelDto>(stringContent);
-                result = AutoMapperConfiguration.Mapper.Map<ApiConnectionResponseModelDto, ApiConnectionResponseModel>(dto);
+                if (dto.cod == 200)
+                {
+                    result = AutoMapperConfiguration.Mapper.Map<ApiConnectionResponseModelDto, ApiConnectionResponseModel>(dto);
+                }            
             }
             finally
             {
