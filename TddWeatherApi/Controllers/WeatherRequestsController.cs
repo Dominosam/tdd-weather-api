@@ -30,9 +30,7 @@ namespace TddWeatherApi.Controllers
 
 
         [ProducesResponseType(typeof(ApiResponseMessageModel<ApiConnectionResponseModel>), 200)]
-        [ProducesResponseType(typeof(ApiMessageModel), 400)]
         [ProducesResponseType(typeof(ApiMessageModel), 404)]
-        [ProducesResponseType(typeof(ApiMessageModel), 500)]
         [HttpPost("Local", Name = GET_WEATHER_FORECAST_BY_CONNECTION_PARAMETERS)]
         public async Task<IActionResult> GetWeather(ApiConnectionParameters apiConnectionParameters)
         {
